@@ -1,89 +1,126 @@
-# Sales for Retail and Food Services in U.S.A.
-![Power BI](https://img.shields.io/badge/power_bi-F2C811?style=for-the-badge&logo=powerbi&logoColor=black)
-![POSTGRESQL](https://img.shields.io/badge/PostgreSQL-4169E1.svg?style=for-the-badge&logo=PostgreSQL&logoColor=white)
-![Microsoft Excel](https://img.shields.io/badge/Microsoft_Excel-217346?style=for-the-badge&logo=microsoft-excel&logoColor=white)
-![Canva](https://img.shields.io/badge/Canva-%2300C4CC.svg?style=for-the-badge&logo=Canva&logoColor=white)
-![Visual Studio Code](https://img.shields.io/badge/Visual%20Studio%20Code-0078d7.svg?style=for-the-badge&logo=visual-studio-code&logoColor=white)
-![Markdown](https://img.shields.io/badge/markdown-%23000000.svg?style=for-the-badge&logo=markdown&logoColor=white)
-![Microsoft Office](https://img.shields.io/badge/Microsoft_Office-D83B01?style=for-the-badge&logo=microsoft-office&logoColor=white)
-![Microsoft Word](https://img.shields.io/badge/Microsoft_Word-2B579A?style=for-the-badge&logo=microsoft-word&logoColor=white)
-![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)
+# 🛒 US Retail Sales Analysis & 2026 Forecasting
 
+> End-to-end analysis of 13 years of US monthly retail sales (2010–2022): which industries drive revenue, how they behaved through COVID-19, when they peak, and what 2026 could look like.
 
-## Overview
-This project aims to analyze and visualize the sales data for Retail and Food Services in the U.S.A. The data is sourced from the U.S. government website and has been processed using SQL to create a database for easy management and analysis. The main focus of this project is to explore the sales data based on NAICS (North American Industry Classification System) code and category.
+![Python](https://img.shields.io/badge/Python-3.10+-blue?logo=python&logoColor=white)
+![pandas](https://img.shields.io/badge/pandas-data%20wrangling-150458?logo=pandas)
+![scikit-learn](https://img.shields.io/badge/scikit--learn-gradient%20boosting-F7931E?logo=scikit-learn&logoColor=white)
+![statsmodels](https://img.shields.io/badge/statsmodels-SARIMA-4B8BBE)
 
-## [Reports](https://github.com/tushar2704/Sales-for-Retail-and-Food-Services/tree/main/reports)
-## Project Structure
+---
 
-    ├── LICENSE
-    ├── README.md          <- README .
-    ├── query              <- Code of the DB creation and queries.
-    │   │
-    │   └── retail_sales_tables_db.sql       <- DB creation.
-    │   └── analysis.sql                     <- Final queries.
-    │   └── query_data                       <- Final queries data.
-    ├── reports            <- Folder containing the final reports/results of this project.
-    │   │
-    │   └── query_report.docx        <- Final analysis report Document.
-    │   └── query_report.pdf         <- Final query report in PDF for verifying data.
-    │   
-    ├── src                <- Source for this project.
-        │
-        ├── data           <- Datasets used and collected for this project.
-        
---------
+## 📌 Project Overview
 
+Retail leaders need to know **where revenue comes from, how stable it is, and when demand peaks** so they can allocate capital, inventory and marketing effectively. This project answers those questions with exploratory analysis of monthly retail sales across **12 industries and 58 business categories**, then extends the analysis into **time-series and machine-learning forecasts for 2026**.
 
+| | |
+|---|---|
+| **Records** | 9,048 monthly observations |
+| **Period** | January 2010 – December 2022 |
+| **Granularity** | Month × NAICS business category (58 kinds of business, grouped into 12 industries) |
+| **Metric** | Sales (in thousands of US dollars) |
 
+---
 
-## Dataset
-The dataset used in this project contains historical sales data for Retail and Food Services in the U.S.A. The data has been collected from the U.S. government website, which ensures its authenticity and reliability. The dataset includes information such as NAICS code, category, sales figures, geographical regions, and time period (e.g., monthly or yearly).
+## 🔑 Key Findings
 
-## Database
-To facilitate data management and analysis, a SQL database has been created to store the dataset. SQL provides a robust and efficient way to query and manipulate the data. The database schema has been designed to ensure proper organization and ease of use. The structure of the database enables seamless integration with various data visualization tools.
+**1. Automotive dominates revenue.**
+Median monthly sales: Automotive (~$67.5M) leads Food & Beverage (~$47.5M), Restaurants & Bars (~$26.0M), Health & Personal Care (~$23.8M) and Fuel & Gasoline (~$16.7M). The top four business categories by total revenue all belong to Automotive, together about **$51.2B, or 26.5%** of sales across all categories.
 
-## Data Processing
-The data obtained from the U.S. government website might require some preprocessing to clean and transform it into a suitable format for analysis. SQL queries have been utilized to clean, filter, and transform the data as necessary. This ensures that the data used for the dashboard is accurate and reliable.
-![NAICS](https://github.com/tushar2704/Sales-for-Retail-and-Food-Services/assets/66141195/c897f5c5-e4ce-446f-8944-c0c0376fcee9)
+**2. Industries reacted to COVID-19 very differently.**
 
+| Industry | Pattern | Evidence |
+|---|---|---|
+| **Automotive** | Dipped in 2020, then surged | ~$4.5M in 2020 → over $5.6M in 2022 |
+| **Food & Beverage** | Steady, pandemic-proof | ~$2.0M (2010) → over $3.2M (2022), no visible 2020 decline |
+| **Restaurants & Bars** | Sharp drop, strong recovery | ~$2.2M (2019) → $1.8M (2020) → $2.5M (2022) |
 
+**3. Seasonality is industry-specific.**
+In 2022, Automotive peaked in **Q2**, Restaurants & Bars in **Q3**, and Food & Beverage, Home Goods & Electronics and General Merchandise in **Q4**. Home Goods & Electronics grew about **51% from Q1 to Q4** in 2020 (~$338K → ~$510K).
 
-## Project includes:
+**4. Food & Beverage is the most dependable baseline.**
+Quarterly sales stayed in a tight band with very low volatility, which makes it a defensive anchor during economic shocks.
 
-**Overview:** A summary of key performance indicators, such as total sales, top-performing categories, and regional distribution of sales.
+---
 
-**Sales by NAICS Code:** Visual representations of sales figures for various NAICS codes, allowing users to identify the most significant contributors to overall sales.
+## 💡 Business Recommendations
 
-**Sales by Category:** Graphs and charts illustrating sales for different categories within Retail and Food Services.
+1. **Automotive:** Invest in dealer inventory and parts supply-chain optimization, given the post-2020 acceleration.
+2. **Food & Beverage:** Treat it as the core defensive hedge in downturns, given its near-linear growth.
+3. **Restaurants & Bars:** Build flexible operations (e.g. hybrid delivery models) to absorb sudden demand shocks.
+4. **Home Goods & Electronics:** Plan inventory capital around the Q3–Q4 surge.
 
-**Geographical Analysis:** Maps and charts showing sales distribution across different regions of the U.S.A.
+---
 
-**Time Series Analysis:** Trends and seasonal patterns in sales data, helping users to identify patterns over time.
+## 🔮 2026 Forecasting
 
-**Filtering and Interactivity:** Interactive elements allowing users to filter data based on specific criteria and perform ad-hoc analysis.
+Two complementary approaches forecast monthly sales through December 2026:
 
-## Technologies Used
-**SQL:** For data extraction, transformation, and loading into the database.
+| Model | Approach | Highlights |
+|---|---|---|
+| **SARIMA** | Seasonal ARIMA `(1,1,1)(1,1,1,12)` with log variance stabilization | Classical baseline with confidence intervals |
+| **Gradient Boosting** | `GradientBoostingRegressor` on year-over-year log growth | Recursive monthly forecasts; lag, rolling and calendar features |
 
-**Database Management System:** PostgreSQL to host and manage the dataset.
+Both are written as reusable **object-oriented pipelines** (`prepare_data → train_and_validate → fit_production → predict_future`). Models are validated on a time-ordered 80/20 holdout using **MAPE** and **RMSE**, then refit on 100% of the history before forecasting.
 
+> **Results:** _add your validation MAPE / RMSE and the 2026 total for each model here._
 
-**Programming Languages:**  SQL for data processing and scripting.
+---
 
+## 🧰 Tech Stack
 
+- **Python:** pandas, NumPy
+- **Visualization:** Matplotlib, Seaborn
+- **Forecasting:** statsmodels (SARIMAX), scikit-learn (GradientBoostingRegressor)
+- **Environment:** Jupyter Notebook
 
-**Conclusion**
-The Sales for Retail and Food Services in U.S.A. project provides a comprehensive analysis of sales data within the Retail and Food Services sectors. The use of SQL and data from the U.S. government website ensures data accuracy and reliability. The interactive dashboard offers a user-friendly interface to explore the data visually and gain valuable insights. This project is valuable for businesses, policymakers, and researchers looking to understand and leverage sales trends in the U.S.A.
+---
 
-## Author
-- <ins><b>©2023 Tushar Aggarwal. All rights reserved</b></ins>
-- <b>[LinkedIn](https://www.linkedin.com/in/tusharaggarwalinseec/)</b>
-- <b>[Medium](https://medium.com/@tushar_aggarwal)</b> 
-- <b>[Tushar-Aggarwal.com](https://www.tushar-aggarwal.com/)</b>
-- <b>[New Kaggle](https://www.kaggle.com/tagg27)</b> 
+## 🔬 Methodology
 
-## Contact me!
+1. **Data inspection:** shape, dtypes, duplicates, unique values, memory usage.
+2. **Cleaning:** 261 missing `sales` values (2.9%) imputed with the median, which is robust to outliers.
+3. **Univariate analysis:** sales distribution (right-skewed).
+4. **Bivariate analysis:** median and total sales by industry; long-run trends for the top 5 industries.
+5. **Seasonality:** months mapped to quarters, with peak quarter per industry for each year (2018–2022).
+6. **Business-level ranking:** top 10 business categories by revenue and market share.
+7. **Forecasting:** SARIMA and gradient boosting pipelines, validated and projected to 2026.
 
-If you have any questions, suggestions, or just want to say hello, you can reach out to us at [Tushar Aggarwal](mailto:info@tushar-aggarwal.com). We would love to hear from you!
+---
 
+## 📁 Repository Structure
+
+```
+├── data/
+│   └── us_monthly_retail_sales_wrangled.csv
+├── notebooks/
+│   └── retail_analysis.ipynb
+├── src/
+│   ├── sarima_sales_forecast_2026.py
+│   └── gb_sales_forecast_2026_simple.py
+├── outputs/
+│   └── sales_forecast_2026.csv
+└── README.md
+```
+
+## ▶️ Getting Started
+
+```bash
+git clone https://github.com/<your-username>/<your-repo>.git
+cd <your-repo>
+pip install pandas numpy matplotlib seaborn statsmodels scikit-learn jupyter
+jupyter notebook notebooks/retail_analysis.ipynb
+```
+
+---
+
+## ⚠️ Limitations & Next Steps
+
+- The data ends in December 2022, so 2026 forecasts are 4 years out and carry wide uncertainty.
+- Business categories follow the NAICS hierarchy (e.g. 441 ⊃ 4411 ⊃ 44111), so summing across all categories double-counts; share figures are indicative.
+- Planned: add 2023–2025 data, external drivers (CPI, interest rates), and a SARIMA + gradient boosting ensemble.
+
+## 👤 Author
+
+**<Your Name>**: Data Analyst
+[LinkedIn](https://linkedin.com/in/your-profile) · [GitHub](https://github.com/your-username) · your.email@example.com

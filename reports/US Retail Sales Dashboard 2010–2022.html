@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>US Retail Sales Dashboard 2010–2022</title>
+<style>
+:root{--bg:#f7f6f2;--card:#fff;--text:#1f1f1c;--muted:#6b6a64;--line:#e3e1d9;--grid:#ecebe4;--accent:#378ADD;--soft:#eef4fb;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#161614;--card:#21211e;--text:#efeee8;--muted:#a09f97;--line:#34342f;--grid:#2d2d29;--accent:#5aa5ee;--soft:#1d2a38}}
+:root[data-theme="dark"]{--bg:#161614;--card:#21211e;--text:#efeee8;--muted:#a09f97;--line:#34342f;--grid:#2d2d29;--accent:#5aa5ee;--soft:#1d2a38}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:14px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:1180px;margin:0 auto;padding:20px 16px 40px}
+header{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:flex-end;margin-bottom:16px}
+h1{font-size:22px;margin:0 0 2px;font-weight:600}
+.sub{color:var(--muted);font-size:13px;margin:0}
+.btns{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+button,select,.filebtn{font:inherit;color:var(--text);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:6px 12px;cursor:pointer}
+button:hover,.filebtn:hover{border-color:var(--accent)}
+.pill{font-size:12px;padding:3px 10px;border-radius:99px;background:var(--soft);color:var(--accent);border:1px solid var(--line)}
+input[type=file]{display:none}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:12px}
+.kpi{--k:var(--accent);background:color-mix(in srgb,var(--k) 12%,var(--card));border:1px solid color-mix(in srgb,var(--k) 35%,var(--line));border-top:4px solid var(--k);border-radius:12px;padding:12px 14px}
+.kpi .l{color:var(--muted);font-size:12px}
+.kpi .v{font-size:22px;font-weight:600;margin-top:2px;color:var(--k)}
+.kpi .s{color:var(--muted);font-size:11px}
+.bar{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin-bottom:12px}
+.bar label{color:var(--muted);font-size:12px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:12px;padding:3px 10px;border-radius:99px;border:1px solid var(--line);background:var(--card);cursor:pointer;user-select:none}
+.chip i{width:9px;height:9px;border-radius:50%;display:inline-block}
+.chip.off{opacity:.4}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr));gap:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;min-width:0}
+.card h2{font-size:15px;margin:0 0 2px;font-weight:600}
+.card .d{color:var(--muted);font-size:12px;margin:0 0 10px}
+.ch{position:relative;height:300px}
+.ch.tall{height:340px}
+.hm{width:100%;border-collapse:separate;border-spacing:3px;font-size:12px}
+.hm th{color:var(--muted);font-weight:500;padding:4px}
+.hm th.r{text-align:left;white-space:nowrap}
+.hm td{text-align:center;padding:12px 4px;border-radius:6px;font-variant-numeric:tabular-nums}
+.hm td.pk{outline:2px solid var(--text);outline-offset:-2px;font-weight:700}
+.note{color:var(--muted);font-size:12px;margin-top:8px}
+.ins{display:grid;gap:10px}
+.ins div{border-left:3px solid var(--accent);padding:2px 0 2px 10px}
+.ins b{display:block;font-size:13px;color:var(--c,var(--text))}.ins div{border-left-color:var(--c,var(--accent))}.ins .alloc{display:flex;height:28px;border-radius:6px;overflow:hidden;margin:8px 0 4px;padding:0;border:0}.ins .alloc span{display:flex;align-items:center;justify-content:center;color:#fff;font-size:11.5px;white-space:nowrap}
+.ins span{color:var(--muted);font-size:12.5px}
+.foot{color:var(--muted);font-size:11.5px;margin-top:14px;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div>
+    <h1>US Monthly Retail Sales Dashboard</h1>
+    <p class="sub">2010–2022 · built from <i>retail_analysis.ipynb</i> <span class="pill" id="mode">Notebook snapshot</span></p>
+  </div>
+  <div class="btns">
+    <label class="filebtn" for="csv">Load full CSV…</label>
+    <input type="file" id="csv" accept=".csv,text/csv">
+    <button id="reset" hidden>Back to snapshot</button>
+  </div>
+</header>
+
+<div class="kpis" id="kpis"></div>
+
+<div class="bar">
+  <label>From <select id="y0"></select></label>
+  <label>To <select id="y1"></select></label>
+  <span class="chips" id="chips"></span>
+</div>
+
+<div class="grid">
+  <div class="card">
+    <h2>Median sales by industry</h2>
+    <p class="d">Median is robust to skew and outliers (as in the notebook).</p>
+    <div class="ch tall"><canvas id="cMed"></canvas></div>
+  </div>
+  <div class="card">
+    <h2>Yearly sales trend</h2>
+    <p class="d">Total sales per year. Toggle industries with the chips above; change the range with the year pickers.</p>
+    <div class="ch tall"><canvas id="cTrend"></canvas></div>
+  </div>
+  <div class="card">
+    <h2>Quarterly sales &amp; peak quarter</h2>
+    <p class="d">Top 5 industries by total sales in the chosen year. <select id="hy"></select></p>
+    <table class="hm" id="hm"></table>
+    <p class="note">Outlined cell = peak quarter for that industry.</p>
+  </div>
+  <div class="card">
+    <h2>Top 10 kinds of business</h2>
+    <p class="d">By total revenue in the selected period, with share of all sales.</p>
+    <div class="ch tall"><canvas id="cTop"></canvas></div>
+  </div>
+  <div class="card" style="grid-column:1/-1">
+    <h2>Key summary observations</h2><p class="d">Findings from the notebook, 2010–2022.</p>
+    <div class="ins">
+      <div style="--c:#378ADD"><b>Automotive dominates and accelerated after 2020</b><span>Dipped to ~$4.46M in 2020 (over 36% of top-5 revenue) then surged past $5.6M by 2022. Peak quarter was Q3 in 2020 ($1.23M) and Q2 in 2021–22. Its four sub-categories are the top 4 business kinds ($51.2M, 26.5% of all sales).</span></div>
+      <div style="--c:#1D9E75"><b>Food &amp; Beverage: steady, recession-proof growth</b><span>Linear climb from ~$2.0M (2010) to over $3.2M (2022) with no 2020 decline. Quarterly sales stayed within $708K–$753K in 2020, a 6.23% spread, the most dependable baseline revenue.</span></div>
+      <div style="--c:#D85A30"><b>Restaurants &amp; Bars: most pandemic-exposed, strong recovery</b><span>~$2.2M in 2019, down to ~$1.8M in 2020 under lockdowns, then back to ~$2.5M+ by 2022.</span></div>
+      <div style="--c:#7F77DD"><b>Home Goods &amp; Electronics: seasonal Q4 momentum</b><span>Grew 50.82% from Q1 ($338,240) to Q4 ($510,127) in 2020. It and General Merchandise peaked in Q4 in every year from 2018 to 2022.</span></div>
+      <div style="--c:#BA7517"><b>Essential retail is the secondary revenue cluster</b><span>Food and beverage stores ($9.45M, 4.9%), grocery stores ($8.46M, 4.4%) and supermarkets ($8.09M, 4.2%) show resilient demand; motor vehicle and parts dealers is the single largest kind at $14.5M (7.5%).</span></div>
+    </div>
+  </div>
+  <div class="card" style="grid-column:1/-1">
+    <h2>Strategies in place</h2><p class="d">Recommended actions from the notebook, tied to the observations above.</p>
+    <div class="ins">
+      <div style="--c:#378ADD"><b>1 · Prioritize Automotive and Food &amp; Beverage</b><span>Focus operational support and capital allocation on the two industries that generate the bulk of revenue; both represent essential, high-volume consumer spending.</span></div>
+      <div style="--c:#378ADD"><b>2 · Invest in the Automotive supply chain</b><span>Given the rapid post-2020 acceleration, direct capital and marketing toward dealer inventory and parts supply-chain optimization.</span></div>
+      <div style="--c:#1D9E75"><b>3 · Use Food &amp; Beverage as the defensive hedge</b><span>Its steady, linear growth was unaffected by global disruption, making it the core anchor in economic downturns.</span></div>
+      <div style="--c:#D85A30"><b>4 · Build flexibility into Restaurants &amp; Bars</b><span>Adopt flexible operating structures, such as hybrid delivery models, to cushion sudden demand shocks like COVID-19.</span></div>
+      <div style="--c:#7F77DD"><b>5 · Recommended asset allocation</b><span><b style="display:inline;color:#1D9E75">Core anchor, 40%: Food &amp; Beverage</b> (capital preservation, minimal quarterly variance). <b style="display:inline;color:#378ADD">Growth engine, 35%: Automotive</b> (high throughput, strong Q3–Q4 cycles). <b style="display:inline;color:#7F77DD">Opportunistic, 15%: Home Goods &amp; Electronics</b> (Q3–Q4 surge; plan Q4 holiday inventory).</span><div class="alloc"><span style="width:44.4%;background:#1D9E75">40% Food &amp; Bev</span><span style="width:38.9%;background:#378ADD">35% Automotive</span><span style="width:16.7%;background:#7F77DD">15%</span></div><span>Weights as stated in the notebook (they sum to 90%; the remainder is not specified).</span></div>
+    </div>
+  </div>
+</div>
+
+<p class="foot" id="foot"></p>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<script>
+const PAL=['#378ADD','#1D9E75','#D85A30','#7F77DD','#BA7517','#D4537E','#639922','#E24B4A','#0F6E56','#993C1D','#534AB7','#888780'];
+const $=s=>document.querySelector(s);
+const cv=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const fmt=n=>Math.round(n).toLocaleString('en-US');
+const M=n=>'$'+(n/1e6).toFixed(2)+'M';
+const median=a=>{if(!a.length)return 0;const s=[...a].sort((x,y)=>x-y),m=s.length>>1;return s.length%2?s[m]:(s[m-1]+s[m])/2};
+const sum=a=>a.reduce((x,y)=>x+y,0);
+
+/* ---------- Notebook snapshot ---------- */
+const YRS=[2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022];
+const SNAP={
+  kpis:{rows:9048,span:'2010–2022',inds:12,kinds:58,imputed:261},
+  med:[
+    {name:'Automotive',val:67514},{name:'Food & Beverage',val:47532},{name:'Restaurants & Bars',val:26023},
+    {name:'Health & Personal Care',val:23799},{name:'Fuel & Gasoline',val:16650},
+    {name:'General Merchandise',val:10100,ap:1},{name:'Miscellaneous',val:10100,ap:1},
+    {name:'Home Goods & Building Supplies',val:8800,ap:1},{name:'Home Goods & Electronics',val:6600,ap:1},
+    {name:'Fashion & Accessories',val:3200,ap:1},{name:'Sports & Recreation',val:2700,ap:1},{name:'Office Supplies & Gifts',val:1400,ap:1}],
+  years:YRS,
+  series:{
+    'Automotive':[2.72,3.00,3.28,3.57,3.82,4.11,4.28,4.41,4.481252,4.606586,4.462952,5.475988,5.624235],
+    'Food & Beverage':[2.01,2.10,2.18,2.23,2.33,2.39,2.44,2.53,2.603203,2.689614,2.932231,3.056425,3.273212],
+    'Restaurants & Bars':[1.29,1.37,1.45,1.51,1.60,1.74,1.83,1.92,2.100947,2.225876,1.789502,2.251515,2.560862],
+    'Health & Personal Care':[0.48,0.50,0.50,0.51,0.54,0.56,0.58,0.59,0.61,0.62,0.65,0.70,0.73],
+    'Fuel & Gasoline':[0.48,0.57,0.59,0.59,0.59,0.48,0.46,0.51,0.56,0.55,0.45,0.62,0.80]
+  },
+  exactYears:{2020:['Automotive','Food & Beverage','Restaurants & Bars'],2022:['Automotive','Food & Beverage','Restaurants & Bars']},
+  q:{
+    2018:[['Automotive',[1072998,1157454,1143766,1107034]],['Food & Beverage',[623643,646033,650740,682787]],['General Merchandise',[368126,396893,396263,473299]],['Home Goods & Electronics',[311604,324733,331977,388845]],['Restaurants & Bars',[487299,542830,543176,527642]]],
+    2019:[['Automotive',[1076406,1184326,1200598,1145256]],['Food & Beverage',[636213,672469,677337,703595]],['General Merchandise',[368245,405838,402460,471525]],['Home Goods & Electronics',[320735,340654,351665,413316]],['Restaurants & Bars',[520865,570135,571468,563408]]],
+    2020:[['Automotive',[996600,1028312,1232712,1205328]],['Food & Beverage',[708436,741922,729306,752567]],['General Merchandise',[383585,400953,409424,470653]],['Home Goods & Electronics',[338240,348869,415274,510127]],['Restaurants & Bars',[480257,374825,474288,460132]]],
+    2021:[['Automotive',[1268902,1508526,1371044,1327516]],['Food & Beverage',[712685,753943,771287,818510]],['General Merchandise',[408998,452691,450615,525565]],['Home Goods & Electronics',[459642,492152,488803,562062]],['Restaurants & Bars',[478930,582237,600710,589638]]],
+    2022:[['Automotive',[1367053,1471718,1426070,1359394]],['Food & Beverage',[760751,810047,825882,876532]],['General Merchandise',[420228,465766,468684,541353]],['Home Goods & Electronics',[484634,513565,517413,578396]],['Restaurants & Bars',[578078,662166,665115,655503]]]
+  },
+  top:[['Motor vehicle and parts dealers',14531121,7.48],['Automobile and other motor vehicle dealers',13310756,6.85],['Automobile dealers',12389347,6.38],['New car dealers',10980583,5.65],['Food and beverage stores',9451004,4.87],['General merchandise stores',9038491,4.65],['Food services and drinking places',8635492,4.45],['Nonstore retailers',8511856,4.38],['Grocery stores',8463197,4.36],['Supermarkets and other grocery (except convenience) stores',8092220,4.17]]
+};
+
+/* ---------- State ---------- */
+let raw=null, m=null, charts={};
+let sel=new Set(Object.keys(SNAP.series));
+let y0=2010,y1=2022,hy=2022;
+let colorNames=SNAP.med.map(x=>x.name);
+const colorOf=n=>PAL[Math.max(0,colorNames.indexOf(n))%PAL.length];
+
+/* ---------- Model from CSV (mirrors notebook logic) ---------- */
+function build(rows,a,b){
+  const R=rows.filter(r=>r.year>=a&&r.year<=b);
+  const by=(arr,f)=>{const mp=new Map();arr.forEach(r=>{const k=f(r);if(!mp.has(k))mp.set(k,[]);mp.get(k).push(r)});return mp};
+  const med=[...by(R,r=>r.industry)].map(([name,v])=>({name,val:median(v.map(x=>x.sales))})).sort((x,y)=>y.val-x.val);
+  const years=[];for(let y=a;y<=b;y++)years.push(y);
+  const series={};
+  med.forEach(({name})=>{series[name]=years.map(()=>0)});
+  R.forEach(r=>{series[r.industry][r.year-a]+=r.sales});
+  Object.keys(series).forEach(k=>series[k]=series[k].map(v=>v/1e6));
+  const q={};
+  years.forEach(y=>{
+    const Ry=R.filter(r=>r.year===y);
+    const tot=new Map();Ry.forEach(r=>tot.set(r.industry,(tot.get(r.industry)||0)+r.sales));
+    const top=[...tot].sort((x,y)=>y[1]-x[1]).slice(0,5).map(x=>x[0]);
+    q[y]=top.map(n=>{const arr=[0,0,0,0];Ry.filter(r=>r.industry===n).forEach(r=>{arr[Math.ceil(r.month/3)-1]+=r.sales});return [n,arr]});
+  });
+  const kinds=new Map();R.forEach(r=>kinds.set(r.kind_of_business,(kinds.get(r.kind_of_business)||0)+r.sales));
+  const total=sum(R.map(r=>r.sales));
+  const top=[...kinds].sort((x,y)=>y[1]-x[1]).slice(0,10).map(([n,v])=>[n,v,+(v/total*100).toFixed(2)]);
+  return {kpis:{rows:R.length,span:a+'–'+b,inds:med.length,kinds:kinds.size,imputed:rows.imputed||0},med,years,series,exactYears:{},q,top};
+}
+
+/* ---------- Rendering ---------- */
+function themeDefaults(){
+  Chart.defaults.color=cv('--muted');Chart.defaults.borderColor=cv('--grid');
+  Chart.defaults.font.family='system-ui,-apple-system,"Segoe UI",sans-serif';
+}
+function mk(id,cfg){if(charts[id])charts[id].destroy();charts[id]=new Chart($('#'+id),cfg)}
+
+function render(){
+  if(raw)m=build(raw,y0,y1);else m=SNAP;
+  themeDefaults();
+
+  // KPIs
+  const k=m.kpis,topInd=m.med[0];
+  const li=m.years.length-1,lead=Object.entries(m.series).map(([n,a])=>[n,a[li]*1e6]).sort((x,y)=>y[1]-x[1])[0],tb=m.top[0];
+  $('#kpis').innerHTML=[
+    ['Records',fmt(k.rows),k.kinds+' kinds of business'],
+    ['Period',k.span,k.inds+' industries'],
+    ['Missing sales imputed',fmt(k.imputed),'filled with the median'],
+    ['Top industry (median)',topInd.name,fmt(topInd.val)+' per record'],
+    ['Latest-year leader',lead[0],M(lead[1])+' in '+m.years[li]],
+    ['Largest business share',tb[2]+'%',tb[0]]
+  ].map(([l,v,s],i)=>`<div class="kpi" style="--k:${['#378ADD','#1D9E75','#D85A30','#7F77DD','#D4537E','#BA7517'][i]}"><div class="l">${l}</div><div class="v" style="${v.length>12?'font-size:16px;padding-top:4px':''}">${v}</div><div class="s">${s}</div></div>`).join('');
+
+  // Chips
+  const names=Object.keys(m.series);
+  $('#chips').innerHTML=names.map(n=>`<span class="chip ${sel.has(n)?'':'off'}" data-n="${n.replace(/"/g,'&quot;')}"><i style="background:${colorOf(n)}"></i>${n}</span>`).join('');
+  document.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{const n=c.dataset.n;sel.has(n)?sel.delete(n):sel.add(n);render()});
+
+  // Median bar
+  mk('cMed',{type:'bar',data:{labels:m.med.map(x=>x.name),datasets:[{data:m.med.map(x=>x.val),backgroundColor:m.med.map(x=>colorOf(x.name)),borderRadius:4}]},
+    options:{indexAxis:'y',maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>' '+fmt(c.raw)+(m.med[c.dataIndex].ap?'  (approx., read from chart)':'')}}},scales:{x:{ticks:{callback:v=>fmt(v)}},y:{grid:{display:false},ticks:{font:{size:11}}}}}});
+
+  // Trend
+  const idx=m.years.map((y,i)=>[y,i]).filter(([y])=>y>=y0&&y<=y1);
+  const ds=names.filter(n=>sel.has(n)).map(n=>({label:n,data:idx.map(([,i])=>m.series[n][i]),borderColor:colorOf(n),backgroundColor:colorOf(n),tension:.25,pointRadius:3,borderWidth:2.5}));
+  mk('cTrend',{type:'line',data:{labels:idx.map(([y])=>y),datasets:ds},
+    options:{maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>' '+c.dataset.label+': $'+c.raw.toFixed(2)+'M'}}},scales:{y:{title:{display:true,text:'Total sales ($ millions)'},ticks:{callback:v=>v+'M'}},x:{grid:{display:false}}}}});
+
+  // Heatmap
+  const hys=Object.keys(m.q).map(Number);
+  if(!hys.includes(hy))hy=hys[hys.length-1];
+  $('#hy').innerHTML=hys.map(y=>`<option ${y===hy?'selected':''}>${y}</option>`).join('');
+  const rows=m.q[hy]||[],all=rows.flatMap(r=>r[1]),lo=Math.min(...all),hi=Math.max(...all);
+  $('#hm').innerHTML='<tr><th></th>'+['Q1','Q2','Q3','Q4'].map(q=>`<th>${q}</th>`).join('')+'</tr>'+
+    rows.map(([n,a])=>{const pk=a.indexOf(Math.max(...a));return `<tr><th class="r">${n}</th>`+a.map((v,i)=>{const t=hi===lo?.5:(v-lo)/(hi-lo),al=(.12+t*.8).toFixed(2);return `<td class="${i===pk?'pk':''}" style="background:rgba(55,138,221,${al});color:${al>.62?'#fff':'var(--text)'}">${fmt(v)}</td>`}).join('')+'</tr>'}).join('');
+
+  // Top 10
+  const T=m.top;
+  mk('cTop',{type:'bar',data:{labels:T.map(x=>x[0].length>34?x[0].slice(0,32)+'…':x[0]),datasets:[{data:T.map(x=>x[1]),backgroundColor:T.map((_,i)=>i<4?PAL[0]:i<9?PAL[1]:PAL[1]),borderRadius:4}]},
+    options:{indexAxis:'y',maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{title:c=>T[c[0].dataIndex][0],label:c=>' $'+fmt(c.raw)+' · '+T[c.dataIndex][2]+'% share'}}},scales:{x:{ticks:{callback:v=>'$'+(v/1e6)+'M'}},y:{grid:{display:false},ticks:{font:{size:11}}}}}});
+
+  // Footer + year pickers
+  $('#foot').innerHTML=raw
+    ?'Computed live from your CSV using the notebook\'s method: missing sales filled with the overall median, quarters from month, sums and medians as in the analysis. The dataset contains nested NAICS categories (e.g. "Motor vehicle and parts dealers" includes "Automobile dealers"), so category totals and shares overlap.'
+    :'Snapshot built from the notebook\'s printed outputs. Exact: top-5 industry medians, 2018–2022 quarterly tables, 2018–2022 yearly totals for Automotive, Food &amp; Beverage and Restaurants, and the top-10 table. Approximate (read from the notebook\'s charts): other yearly points and the 7 smaller industry medians. Load the full CSV for exact, fully filterable results. Note that category totals overlap because the data contains nested NAICS categories.';
+  $('#y0').value=y0;$('#y1').value=y1;
+}
+
+function fillYears(ys){
+  const o=ys.map(y=>`<option>${y}</option>`).join('');
+  $('#y0').innerHTML=o;$('#y1').innerHTML=o;$('#y0').value=y0;$('#y1').value=y1;
+}
+$('#y0').onchange=e=>{y0=+e.target.value;if(y0>y1)y1=y0;render()};
+$('#y1').onchange=e=>{y1=+e.target.value;if(y1<y0)y0=y1;render()};
+$('#hy').onchange=e=>{hy=+e.target.value;render()};
+
+/* ---------- CSV loading ---------- */
+$('#csv').onchange=e=>{
+  const f=e.target.files[0];if(!f)return;
+  Papa.parse(f,{header:true,dynamicTyping:true,skipEmptyLines:true,complete:res=>{
+    const need=['month','year','industry','kind_of_business','sales'];
+    if(!need.every(c=>res.meta.fields.includes(c))){alert('CSV must contain columns: '+need.join(', '));return}
+    const rows=res.data.filter(r=>r.year&&r.month&&r.industry);
+    const med=median(rows.filter(r=>typeof r.sales==='number'&&!isNaN(r.sales)).map(r=>r.sales));
+    let imp=0;rows.forEach(r=>{if(typeof r.sales!=='number'||isNaN(r.sales)){r.sales=med;imp++}});
+    rows.imputed=imp;raw=rows;
+    const ys=[...new Set(rows.map(r=>r.year))].sort((a,b)=>a-b);
+    y0=ys[0];y1=ys[ys.length-1];hy=y1;fillYears(ys);
+    const mm=build(rows,y0,y1);colorNames=mm.med.map(x=>x.name);
+    sel=new Set(mm.med.slice(0,5).map(x=>x.name));
+    $('#mode').textContent='Live CSV: '+f.name;$('#reset').hidden=false;render();
+  }});
+};
+$('#reset').onclick=()=>{raw=null;y0=2010;y1=2022;hy=2022;colorNames=SNAP.med.map(x=>x.name);sel=new Set(Object.keys(SNAP.series));fillYears(YRS);$('#mode').textContent='Notebook snapshot';$('#reset').hidden=true;$('#csv').value='';render()};
+
+fillYears(YRS);render();
+if(window.matchMedia)matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>render());
+</script>
+</body>
+</html>
