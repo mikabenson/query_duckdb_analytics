@@ -25,7 +25,7 @@ Retail leaders need to know **where revenue comes from, how stable it is, and wh
 ## 🔑 Key Findings
 
 **1. Automotive dominates revenue.**
-Median monthly sales: Automotive (~$67.5M) leads Food & Beverage (~$47.5M), Restaurants & Bars (~$26.0M), Health & Personal Care (~$23.8M) and Fuel & Gasoline (~$16.7M). The top four business categories by total revenue all belong to Automotive, together about **$51.2B, or 26.5%** of sales across all categories.
+Median monthly sales: Automotive (~ USD 67.5 K) leads Food & Beverage (~USD 47.5 K), Restaurants & Bars (~USD 26.0 K), Health & Personal Care (~USD 23.8 K) and Fuel & Gasoline (~USD 16.7 K). The top four business categories by total revenue all belong to Automotive, together about **USD 53.8 M, or 26.5%** of sales across all categories.
 
 **2. Industries reacted to COVID-19 very differently.**
 
@@ -103,17 +103,6 @@ Both are written as reusable **object-oriented pipelines** (`prepare_data → tr
 └── README.md
 ```
 
-## ▶️ Getting Started
-
-```bash
-git clone https://github.com/<your-username>/<your-repo>.git
-cd <your-repo>
-pip install pandas numpy matplotlib seaborn statsmodels scikit-learn jupyter
-jupyter notebook notebooks/retail_analysis.ipynb
-```
-
----
-
 ## ⚠️ Limitations & Next Steps
 
 - The data ends in December 2022, so 2026 forecasts are 4 years out and carry wide uncertainty.
@@ -122,5 +111,5 @@ jupyter notebook notebooks/retail_analysis.ipynb
 
 ## 👤 Author
 
-**<Your Name>**: Data Analyst
-[LinkedIn](https://linkedin.com/in/your-profile) · [GitHub](https://github.com/your-username) · your.email@example.com
+**<Mika Benson>**: Data Scientist
+[LinkedIn](https://www.linkedin.com/in/mika-benson) · [GitHub](https://github.com/mikabenson) · mikabenstec97@gmail.com
